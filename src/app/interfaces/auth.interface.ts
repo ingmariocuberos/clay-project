@@ -12,3 +12,8 @@ export interface Data {
     daysExpiration: number;
     userName:       string;
 }
+
+export interface LogoutData {
+    approved:       boolean;
+    accessToken:   string;
+}

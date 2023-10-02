@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { processLogout } from 'app/global/logout.utils';
+import { LogoutData } from 'app/interfaces/auth.interface';
+import { AuthService } from 'app/services/auth/auth.service';
 
 declare const $: any;
 declare interface RouteInfo {
@@ -26,7 +29,10 @@ export const ROUTES: RouteInfo[] = [
 export class SidebarComponent implements OnInit {
   menuItems: any[];
 
-  constructor() { }
+  constructor(
+    private authServ: AuthService,
+    private logoutUtil: processLogout
+  ) { }
 
   ngOnInit() {
     this.menuItems = ROUTES.filter(menuItem => menuItem);
@@ -37,4 +43,14 @@ export class SidebarComponent implements OnInit {
       }
       return true;
   };
+
+  logout(){
+    this.authServ.sendLogout().subscribe(
+        (resp: LogoutData) => {
+            if(resp.approved){
+              this.logoutUtil.processLogout();
+            }
+        }
+    )
+  }
 }

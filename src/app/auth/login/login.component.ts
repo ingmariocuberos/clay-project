@@ -31,10 +31,12 @@ export class LoginComponent implements OnInit {
   }
 
   startLogin(){
-    this.authService.sendLogin().subscribe(
+    const username: string = this.loginForm.get('username').value;
+    const password: string = this.loginForm.get('password').value;
+    this.authService.sendLogin(username, password).subscribe(
       ({ data }) => {
         if(this.processingLogin(data)){
-          this.router.navigate(['/home']);
+          this.router.navigate(['/app/dashboard']);
         };
       }
     )

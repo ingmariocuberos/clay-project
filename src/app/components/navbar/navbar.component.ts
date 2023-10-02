@@ -2,6 +2,10 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { ROUTES } from '../sidebar/sidebar.component';
 import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthService } from 'app/services/auth/auth.service';
+import { CryptoServiceLS } from 'app/services/crypto/crypto.service';
+import { processLogout } from 'app/global/logout.utils';
+import { LogoutData } from 'app/interfaces/auth.interface';
 
 @Component({
   selector: 'app-navbar',
@@ -15,7 +19,14 @@ export class NavbarComponent implements OnInit {
     private toggleButton: any;
     private sidebarVisible: boolean;
 
-    constructor(location: Location,  private element: ElementRef, private router: Router) {
+    constructor(
+        location: Location,  
+        private element: ElementRef, 
+        private router: Router,
+        private authServ: AuthService,
+        private cryptoServ: CryptoServiceLS,
+        private logoutUtil: processLogout
+    ) {
       this.location = location;
           this.sidebarVisible = false;
     }
@@ -121,5 +132,15 @@ export class NavbarComponent implements OnInit {
           }
       }
       return 'Dashboard';
+    }
+
+    logout(){
+        this.authServ.sendLogout().subscribe(
+            (resp: LogoutData) => {
+                if(resp.approved){
+                    this.logoutUtil.processLogout();
+                }
+            }
+        )
     }
 }
