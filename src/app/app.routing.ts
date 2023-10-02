@@ -7,7 +7,7 @@ import { AdminLayoutComponent } from './pages/admin-layout/admin-layout.componen
 const routes: Routes =[
   {
     path: 'auth',
-    redirectTo: 'dashboard'
+    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
   }, {
     path: 'app',
     component: AdminLayoutComponent,
@@ -15,6 +15,9 @@ const routes: Routes =[
       path: '',
       loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule)
     }]
+  }, {
+    path: '**',
+    redirectTo: 'auth'
   }
 ];
 
