@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from 'app/services/auth/auth.service';
+import { CryptoServiceLS } from 'app/services/crypto/crypto.service';
 
 @Component({
   selector: 'app-login',
@@ -7,9 +11,42 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginComponent implements OnInit {
 
-  constructor() { }
+  public loginForm: FormGroup = this.fb.group({
+    username: ['', Validators.required],
+    password: ['', Validators.required]
+  });
+
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authService: AuthService,
+    private cryptUtil: CryptoServiceLS
+  ) { }
 
   ngOnInit(): void {
   }
 
+  startLogin(){
+    this.authService.sendLogin().subscribe(
+      ({ data }) => {
+        if(this.processingLogin(data)){
+          this.router.navigate(['/home']);
+        };
+      }
+    )
+  }
+
+  processingLogin({status, access_token, userName}): boolean{
+    if(status === 200 && access_token){
+      this.cryptUtil.storeData('username', userName)
+      this.cryptUtil.storeData('accessToken', access_token)
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  resetForm(){
+    this.loginForm.reset();
+  }
 }
