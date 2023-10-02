@@ -3,6 +3,7 @@ import { CommonModule, } from '@angular/common';
 import { BrowserModule  } from '@angular/platform-browser';
 import { Routes, RouterModule } from '@angular/router';
 import { AdminLayoutComponent } from './pages/admin-layout/admin-layout.component';
+import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes =[
   {
@@ -10,6 +11,7 @@ const routes: Routes =[
     loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
   }, {
     path: 'app',
+    canActivateChild: [AuthGuard],
     component: AdminLayoutComponent,
     children: [{
       path: '',

@@ -21,7 +21,11 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private cryptUtil: CryptoServiceLS
-  ) { }
+  ) {
+    if(localStorage.getItem('accessToken')){
+      router.navigate(['/app/dashboard']);
+    }
+  }
 
   ngOnInit(): void {
   }
